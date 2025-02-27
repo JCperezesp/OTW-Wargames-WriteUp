@@ -124,6 +124,7 @@ El siguiente archivo se encuentra en alguna parte del sistema de ficheros del se
   Usa `groups` para verificar que tu usuario pertenezca al grupo **bandit6**.
 
 Podemos volver a usar el comando find junto con las opciones de las páginas del manual para buscar por los criterios establecidos. Como se va a intentar acceder a muchos ficheros y algunos nuestro usuario no tiene permiso para leerlos, nos van a aparecer múltiples errores de permiso en la terminal. 
+
 Esto puede evitarse redirigiendo la salida de standart error a null con **`2>/dev/null.`** El 2 hace referencia al descriptor de fichero de stderr (stdout, la salida estándar, es 1). 
 Con el uso de exec además podemos hacer que se muestre el fichero en pantalla cuando se encuentre, como en el nivel anterior.
 
@@ -137,7 +138,11 @@ Con el uso de exec además podemos hacer que se muestre el fichero en pantalla c
 
 ## 💻 **BANDIT7 → BANDIT8**
 
-La contraseña se encuentra en el fichero **`data.txt`**, el cual es muy grande y contiene muchas líneas. Sabemos que la contraseña está junto a la palabra **`millionth`**.
+En esta ocasión la contraseña se encuentra en el fichero **`data.txt`**. Este fichero es muy grande y contiene muchas líneas. 
+Sabemos que la contraseña está junto a la palabra **`millionth`**. El comando `grep` en linux nos permite filtrar el contenido de un fichero según una expresión regular. 
+
+Por defecto, grep saca las líneas del fichero donde hay match con la expresión regular. Podemos utilizar tanto grep sólo como con el comando cat y el operador pipe '|' para 
+redirigir la salida.
 
 ### 🔍 Uso de `grep`:
 `grep` filtra el contenido de un fichero usando expresiones regulares y muestra las líneas donde hay coincidencia.
@@ -158,11 +163,12 @@ La contraseña se encuentra en el fichero **`data.txt`**, el cual es muy grande 
 
 ## 💻 **BANDIT8 → BANDIT9**
 
-En este nivel, la contraseña se encuentra en la única línea **no repetida** del fichero **`data.txt`**, mientras que todas las demás líneas se repiten.
+La contraseña sigue estando en `data.txt`, pero ahora esta contraseña está en la única línea del fichero que **no está repetida**. Todas las demás líneas son repetidas.
 
 ### ⚙️ Combinando `sort` y `uniq`:
-- **`sort`** ordena las líneas para que las repetidas queden juntas.
-- **`uniq -u`** muestra solo las líneas que no se repiten.
+El comando **`uniq`** permite realizar operaciones interesantes con ficheros que tienen líneas repetidas, como contar cuántas veces se repite cada línea, eliminar repetidas o mostrar sólo las no repetidas, que es lo que nos interesa (param. -u). La pega es que este comando sólo funciona correctamente si las líneas repetidas son ADYACENTES en el fichero. Esto tiene solución: ordenar las líneas para que las repetidas vayan todas juntas. 
+
+El comando **`sort`** permite ordenar las líneas de un fichero. Combinando ambos comandos podemos resolver el problema y encontrar nuestra contraseña.
 
 > **Solución:**
 >
