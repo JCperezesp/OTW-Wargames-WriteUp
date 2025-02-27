@@ -1,9 +1,6 @@
 
 # 🔐 Bandit: niveles 0 - 9
 
-A continuación, se presenta un resumen de cada nivel de Bandit, con ejemplos de comandos y sus respectivas soluciones.
-
----
 
 ## 🚀 **BANDIT0 → BANDIT1**
 
