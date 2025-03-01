@@ -157,14 +157,49 @@ Cuando termine el escaneo, veremos en pantalla algo como lo siguiente:
 
 ![Captura de pantalla 2025-03-01 121104](https://github.com/user-attachments/assets/b8667d4b-7990-4974-8621-222cf156cfa5)
 
-Vemos que nmap ha sido capaz de reconcer 5 puertos abiertos en el rango dado. 2 de ellos emplean **ssl**, son los que nos interesan. uno de ellos corre el servicio **echo**, es decir, repetirá todo lo que le enviemos 🦜. El puerto al cual deberíamos probar es pues el **`31790`**.  
+Vemos que nmap ha sido capaz de reconcer 5 puertos abiertos en el rango dado. 2 de ellos emplean **ssl**, son los que nos interesan. uno de ellos corre el servicio **echo**, es decir, repetirá todo lo que le enviemos (no nos interesa🦜). El puerto al cual deberíamos probar es pues el **`31790`**.  
 
 **Solución:**
 
-Establecemos la conexión con **s_client**, igual que en el nivel anterior. Una vez conectados, introducimos la contraseña. Si lo hemos hecho bien, el servidor nos devolverá una clave RSA privada que, si hemos completado el nivel 13 → 14, sabremos usar.
+Establecemos la conexión con **s_client** a ese puerto, igual que en el nivel anterior. Una vez conectados, introducimos la contraseña. Si lo hemos hecho bien, el servidor nos devolverá una clave RSA privada que, si hemos completado el nivel 13 → 14, sabremos usar.
 
 ```sh
 openssl s_client -connect localhost:31790 -ign_eof
 ```
 
 >La opción _-ign_eof_ evita conflictos con el carácter de return a la hora de introducir la contraseña.
+
+## 💻 **BANDIT17 → BANDIT18**
+
+en este nivel tenemos dos ficheros en la carpeta personal, **passwords.old y passwords.new**. La contraseña de este nivel se encuentra en el fichero **passwords.new**, en la única línea en la cual difieren ambos ficheros.
+
+El comando **`diff`** permite extraer diferencias entre ficheros en Linux. Podemos usarloo para extraer la línea concreta en la cual difieren ambos ficheros y obtener rápidamente la contraseña sin tener que buscar a ojo.
+
+**Solución:**
+
+```sh
+diff passwords.old passwords.new
+```
+Tammbién se pueden usar los comandos sort y uniq como se vio en niveles anteriores para sacar la línea exclusiva.
+
+## 💻 **BANDIT18 → BANDIT19**
+
+En este nivel la contraseña se encuentra en un fichero llamado **readme**. El problema aquí es que alguien ha modificado el fichero **.bashrc**. Este fichero se ejecuta cada vez que el usuario se loguea, y alguien ha añadido la orden **`exit 0`** para que el sistema nos expulse nada más loguearnos.
+
+Sin embargo aunque no podemos usar la terminal con ssh, si que podemos ejecutar comandos a través de ssh como cat, more, less o ls. Si se tiene en cuenta esto la solución es muy simple.
+
+**Solución:**
+
+Existen múltiples soluciones. La más sencilla, hacer cat o less a través de ssh para ver el fichero readme remoto.
+```sh
+ssh -p 2220 bandit18@bandit.labs.overthewire.org cat readme
+```
+También podemos ejecutar una terminal tipo **sh**, que es má sencilla y no emplea el fichero .bashrc por lo que no nos expulsará.
+```sh
+ssh -p 2220 bandit18@bandit.labs.overthewire.org -t sh
+```
+O podemos intentar descargarnos el fichero readme a nuestra máquina atacante mediante scp, utilidad que funciona a través de ssh.
+
+```bash
+scp -P 2220 bandit18@bandit.labs.overthewire.org:/home/bandit18/readme .
+```
