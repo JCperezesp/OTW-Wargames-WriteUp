@@ -119,13 +119,24 @@ cat /etc/bandit_pass/bandit14 | nc localhost 30000
 ---
 
 ## 💻 **BANDIT15 → BANDIT16**
-En este nivel la idea es exactamente la misma que en nivel anterior, pero con dos diferencias: - El puerto al que se debe realizar la conexión mediante socket y enviar la contraseña es el **30001**. Este puerto funciona a través de TLS 1.3 y emplea cifrado junto con un certificado de servidor, por lo que la conexión debe realizarse de forma diferente.
+En este nivel la idea es exactamente la misma que en nivel anterior, pero con dos diferencias: 
+- El puerto al que se debe realizar la conexión mediante socket y enviar la contraseña es el **30001**.
+- Este puerto funciona a través de TLS 1.3 y emplea cifrado junto con un certificado de servidor, por lo que la conexión debe realizarse de forma diferente.
 
 ### 🔐 OpenSSL: 
 
-OpenSSL es una suite de herramientas relacionadas con el cifrado de datos y la expedición de certificados digitales, entre otras cosas. La **`herramienta s_client`** de OpenSSL implementa un cliente SSL/TLS permite depurar puertos SSL/TLS, por lo que podemos realizar la conexión al puerto mediante esta herramienta usando la opción -connect. La conexión que se establece es interactiva de alguna manera y todas las teclas pulsadas son enviadas por el socket, por lo que para tener éxito en esta ocasión **no usaremos el operador de tubería** para redirigir la salida de cat, si no que estableceremos primero la conexión con s_client y luego pegaremos o escribiremos la contraseña.
+OpenSSL es una suite de herramientas relacionadas con el cifrado de datos y la expedición de certificados digitales, entre otras cosas. La **`herramienta s_client`** de OpenSSL implementa un cliente SSL/TLS permite depurar puertos SSL/TLS, por lo que podemos realizar la conexión al puerto mediante esta herramienta usando la opción -connect. 
+
+La conexión que se establece es interactiva de alguna manera y todas las teclas pulsadas son enviadas por el socket, por lo que para tener éxito en esta ocasión **no usaremos el operador de tubería** para redirigir la salida de cat, si no que estableceremos primero la conexión con s_client y luego pegaremos o escribiremos la contraseña.
 
 > Nota: Cuando hablamos de SSL y TLS, realmente son lo mismo. TLS (Transport Layer Security) vendría a ser la versión moderna de SSL (Socket Security Layer).
+
+**Solución:**
+
+```sh
+openssl s_client -connect localhost:30001
+```
+Una vez ejecutado el comando, enviar la contraseña a través de la terminal para recibir la del siguiente nivel.
 
 ---
 
@@ -142,3 +153,18 @@ Una opción interesante de nmap es la **detección de versiones (opción -sV)**.
  nmap -p31000-32000 -sV localhost
 ```
 
+Cuando termine el escaneo, veremos en pantalla algo como lo siguiente: 
+
+![Captura de pantalla 2025-03-01 121104](https://github.com/user-attachments/assets/b8667d4b-7990-4974-8621-222cf156cfa5)
+
+Vemos que nmap ha sido capaz de reconcer 5 puertos abiertos en el rango dado. 2 de ellos emplean **ssl**, son los que nos interesan. uno de ellos corre el servicio **echo**, es decir, repetirá todo lo que le enviemos 🦜. El puerto al cual deberíamos probar es pues el **`31790`**.  
+
+**Solución:**
+
+Establecemos la conexión con **s_client**, igual que en el nivel anterior. Una vez conectados, introducimos la contraseña. Si lo hemos hecho bien, el servidor nos devolverá una clave RSA privada que, si hemos completado el nivel 13 → 14, sabremos usar.
+
+```sh
+openssl s_client -connect localhost:31790 -ign_eof
+```
+
+>La opción _-ign_eof_ evita conflictos con el carácter de return a la hora de introducir la contraseña.
