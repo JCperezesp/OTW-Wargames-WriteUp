@@ -50,8 +50,15 @@ Es importante entender que este programa actuará como **_cliente_**, por lo que
 
 En una terminal:
 ```sh
-nc -lnvp 9000
+nc -lvp 9000
 ```
+**_Opciones:_**
+
+- **-l**: Listen, permite establecer una conexión de escucha.
+- **-v**: Modo verbose, es útil incluirlo ya que otorga más información si ocurre algún error.
+- **-p**: Port, para especificar el puerto de escucha.
+
+
 Luego establecemos la conexión con ./suconnect.
 Usamos el puerto 9000 pero cualquier puerto libre es válido
 

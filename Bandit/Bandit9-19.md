@@ -96,11 +96,9 @@ Teniendo la clave privada de **bandit14** y suponiendo que el fichero de clave p
 
 **Solución:**
 
-sh
-Copiar
-Editar
+```sh
 ssh -p 2220 -i ssh_private_key bandit14@localhost
-
+```
 ---
 
 ## 💻 **BANDIT14 → BANDIT15**
