@@ -83,8 +83,8 @@ Un asterisco en una de las columnas de tiempo indica básicamente "todo". Cinco 
 
 ```bash
 # Minuto  Hora  Día del Mes  Mes  Día Semana  Usuario Comando
-0 3 * * * /usr/bin/backup.sh  root   # Backup diario a las 3 AM
-0 0 1 * * /usr/bin/monthly_report.sh root # Genera un informe el primer día de cada mes a medianoche
+0 3 * * * root /usr/bin/backup.sh     # Backup diario a las 3 AM
+0 0 1 * * root /usr/bin/monthly_report.sh  # Genera un informe el primer día de cada mes a medianoche
 ```
 #### Crontab del sistema VS crontab de usuarios:
 Además del fichero **`/etc/crontab`**, cada usuario puede tener su propio fichero de crontab que se ejecutará con sus permisos, pero esto no aplica a este problema.
